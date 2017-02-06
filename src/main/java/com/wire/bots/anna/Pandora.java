@@ -43,10 +43,12 @@ public class Pandora {
                 .queryParam("input", text)
                 .queryParam("recent", true)
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(null));
+                .post(Entity.entity(null, MediaType.APPLICATION_JSON));
 
         if (response.getStatus() > 300) {
-            String msg = response.readEntity(String.class);
+            String msg = String.format("Pandora.talk: msg: %s, status: %d",
+                    response.readEntity(String.class),
+                    response.getStatus());
             Logger.warning(msg);
             throw new IOException(msg);
         }

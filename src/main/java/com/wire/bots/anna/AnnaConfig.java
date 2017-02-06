@@ -44,7 +44,7 @@ public class AnnaConfig extends com.wire.bots.sdk.Configuration {
         return delay;
     }
 
-    class PandoraConfig {
+    public static class PandoraConfig {
         String appId;
         String userKey;
         String bot;

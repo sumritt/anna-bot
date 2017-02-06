@@ -22,6 +22,6 @@ accent: 4
 delay: 2
 
 pandora:
-  appKey: something
+  appId: something
   userKey: something else
-  bot: Anna
+  bot: anna
