@@ -1,0 +1,27 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8049
+    - type: https
+      port: 8050
+      keyStorePath: certs/keystore.jks
+      keyStorePassword: 123456
+      certAlias: myservercert
+      validateCerts: false
+      validatePeers: false
+
+  adminConnectors:
+    - type: http
+      port: 8051
+#  requestLog:
+#    appenders: []
+
+auth: Bearer your_auth_token
+name: Anna
+accent: 4
+delay: 2
+
+pandora:
+  appKey: something
+  userKey: something else
+  bot: Anna
