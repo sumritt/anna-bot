@@ -1,7 +1,6 @@
 package com.wire.bots.anna;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.wire.bots.sdk.Logger;
 import org.glassfish.jersey.client.ClientConfig;
@@ -56,7 +55,6 @@ public class Pandora {
         return response.readEntity(PandoraResponse.class).responses;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PandoraResponse {
         public ArrayList<String> responses;

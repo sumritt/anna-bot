@@ -21,7 +21,6 @@ package com.wire.bots.anna;
 import com.wire.bots.sdk.Logger;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.WireClient;
-import com.wire.bots.sdk.assets.Picture;
 import com.wire.bots.sdk.models.ImageMessage;
 import com.wire.bots.sdk.models.TextMessage;
 import com.wire.bots.sdk.server.model.NewBot;
@@ -55,20 +54,24 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     @Override
-    public void onNewConversation(WireClient client) {
-        try {
-            Logger.info(String.format("onNewConversation: bot: %s, conv: %s",
-                    client.getId(),
-                    client.getConversationId()));
+    public void onNewConversation(final WireClient client) {
+        Logger.info(String.format("onNewConversation: bot: %s, conv: %s",
+                client.getId(),
+                client.getConversationId()));
 
-            String text = "Hi, I'm Anna, an experimental chat bot. " +
-                    "You can ask me things, and even teach me. What shall we talk about?";
+        final String text = "Hi, I'm Anna, an experimental chat bot. " +
+                "You can ask me things, and even teach me. What shall we talk about?";
 
-            client.sendText(text);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.error(e.getMessage());
-        }
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    client.sendText(text);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, TimeUnit.SECONDS.toMillis(2));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class MessageHandler extends MessageHandlerBase {
         try {
             Logger.info(String.format("Received Text. bot: %s, from: %s", client.getId(), msg.getUserId()));
 
-            reply(client, msg.getUserId(), msg.getText());
+            reply(client, msg.getText());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +96,7 @@ public class MessageHandler extends MessageHandlerBase {
                     msg.getTag()
             ));
 
-            reply(client, msg.getUserId(), "ANNAIMAGE");
+            reply(client, "ANNAIMAGE");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,7 +134,7 @@ public class MessageHandler extends MessageHandlerBase {
                 ));
 
                 // say Hi to new participant
-                client.sendText("Hi there " + user.name);
+                client.sendText("Hi there, " + user.name);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,17 +154,15 @@ public class MessageHandler extends MessageHandlerBase {
         Logger.info("This bot got removed from the conversation :(. BotId: " + botId);
     }
 
-    private void reply(final WireClient client, final String userId, String text) throws Exception {
+    private void reply(final WireClient client, String text) throws Exception {
         final String input = text.length() > MAX_INPUT_SIZE ? text.substring(0, MAX_INPUT_SIZE) : text;
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    for (String resp : pandora.talk(userId, input)) {
-                        for (String line : resp.split("\n")) {
-                            post(client, line);
-                        }
+                    for (String talk : pandora.talk(client.getId(), input)) {
+                        client.sendText(talk);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -169,18 +170,5 @@ public class MessageHandler extends MessageHandlerBase {
                 }
             }
         }, TimeUnit.SECONDS.toMillis(config.getDelay()));
-
-    }
-
-    private void post(WireClient client, String content) throws Exception {
-        if (content.endsWith(".jpeg")
-                || content.endsWith(".jpg")
-                || content.endsWith(".png")
-                || content.endsWith(".gif")) {
-            Picture picture = ImageLoader.loadImage(content);
-            client.sendPicture(picture.getImageData(), picture.getMimeType());
-        } else {
-            client.sendText(content);
-        }
     }
 }
