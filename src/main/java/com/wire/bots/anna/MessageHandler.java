@@ -45,15 +45,6 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     @Override
-    public boolean onNewBot(NewBot newBot) {
-        Logger.info(String.format("onNewBot: bot: %s, origin: %s",
-                newBot.id,
-                newBot.origin.id));
-
-        return true;
-    }
-
-    @Override
     public void onNewConversation(final WireClient client) {
         Logger.info(String.format("onNewConversation: bot: %s, conv: %s",
                 client.getId(),
@@ -103,26 +94,6 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     @Override
-    public String getName() {
-        return config.getName();
-    }
-
-    @Override
-    public int getAccentColour() {
-        return config.getAccent();
-    }
-
-    @Override
-    public String getSmallProfilePicture() {
-        return null;
-    }
-
-    @Override
-    public String getBigProfilePicture() {
-        return null;
-    }
-
-    @Override
     public void onMemberJoin(WireClient client, ArrayList<String> userIds) {
         try {
             Collection<User> users = client.getUsers(userIds);
@@ -152,6 +123,15 @@ public class MessageHandler extends MessageHandlerBase {
     @Override
     public void onBotRemoved(String botId) {
         Logger.info("This bot got removed from the conversation :(. BotId: " + botId);
+    }
+
+    @Override
+    public boolean onNewBot(NewBot newBot) {
+        Logger.info(String.format("onNewBot: bot: %s, origin: %s",
+                newBot.id,
+                newBot.origin.id));
+
+        return true;
     }
 
     private void reply(final WireClient client, String text) throws Exception {

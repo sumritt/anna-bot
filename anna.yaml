@@ -18,8 +18,6 @@ server:
 
 cryptoDir: crypto
 auth: Bearer your_auth_token
-name: Anna
-accent: 4
 delay: 2
 
 pandora:

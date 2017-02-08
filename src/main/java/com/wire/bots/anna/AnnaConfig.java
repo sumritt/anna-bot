@@ -21,23 +21,12 @@ package com.wire.bots.anna;
 import javax.validation.constraints.NotNull;
 
 public class AnnaConfig extends com.wire.bots.sdk.Configuration {
-    public String name;
-    public int accent;
-
     @NotNull
     public PandoraConfig pandora;
     public long delay = 2; // delay in mills when replying
 
     public PandoraConfig getPandora() {
         return pandora;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAccent() {
-        return accent;
     }
 
     public long getDelay() {

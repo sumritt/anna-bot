@@ -32,6 +32,17 @@ public class Pandora {
         client = JerseyClientBuilder.createClient(cfg);
     }
 
+    /**
+     * Sends text to pandorabots to be analyzed
+     *
+     * @param clientName From Pandorabots website: "Identifies your application's end user. You can assign each of your
+     *                   end users a unique client_name. This will allow you to set predicates and other variable
+     *                   information that is specific to an individual. Format required is 3-64 characters in length
+     *                   and only numbers or lower-case letters [0-9][a-z]"
+     * @param text       Message to be sent to the bot. This can contain multiple sentences. Currently the limit is 500 characters.
+     * @return The response array will contain one element (response) for each sentence you input to the bot.
+     * @throws IOException
+     */
     public ArrayList<String> talk(String clientName, String text) throws IOException {
         Response response = client.target(PANDORA_URL)
                 .path("talk")
