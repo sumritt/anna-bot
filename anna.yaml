@@ -4,8 +4,8 @@ server:
       port: 8049
     - type: https
       port: 8050
-      keyStorePath: certs/keystore.jks
-      keyStorePassword: 123456
+      keyStorePath: keystore.jks
+      keyStorePassword: WordsDontComeEasy2Me
       certAlias: myservercert
       validateCerts: false
       validatePeers: false
@@ -16,6 +16,7 @@ server:
 #  requestLog:
 #    appenders: []
 
+cryptoDir: crypto
 auth: Bearer your_auth_token
 name: Anna
 accent: 4
