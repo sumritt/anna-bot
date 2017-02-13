@@ -20,6 +20,7 @@ package com.wire.bots.anna;
 
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
+import io.dropwizard.setup.Environment;
 
 public class AnnaService extends Server<AnnaConfig> {
     public static void main(String[] args) throws Exception {
@@ -27,7 +28,7 @@ public class AnnaService extends Server<AnnaConfig> {
     }
 
     @Override
-    protected MessageHandlerBase createHandler(AnnaConfig config) {
+    protected MessageHandlerBase createHandler(AnnaConfig config, Environment env) {
         return new MessageHandler(config);
     }
 }
