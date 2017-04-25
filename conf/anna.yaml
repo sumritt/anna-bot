@@ -1,26 +1,21 @@
 server:
   applicationConnectors:
     - type: http
-      port: 8049
+      port: 8060
     - type: https
-      port: 8050
+      port: 443
       keyStorePath: keystore.jks
-      keyStorePassword: WordsDontComeEasy2Me
       certAlias: myservercert
       validateCerts: false
       validatePeers: false
 
   adminConnectors:
     - type: http
-      port: 8051
+      port: 8061
 #  requestLog:
 #    appenders: []
 
-cryptoDir: crypto
-auth: Bearer your_auth_token
 delay: 2
 
 pandora:
-  appId: something
-  userKey: something else
   bot: anna

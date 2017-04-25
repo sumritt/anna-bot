@@ -1,0 +1,84 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anna
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: anna
+    spec:
+      restartPolicy: Always
+
+      containers:
+        - name: anna
+          image: eu.gcr.io/wire-bot/anna:latest
+
+          resources:
+            requests:
+              memory: "50Mi"
+            limits:
+              memory: "500Mi"
+
+          env:
+            - name: ANNA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: anna-knows
+                  key: token
+
+            - name: ANNA_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: anna-knows
+                  key: keystore_password
+
+            - name: ANNA_PANDORA_ID
+              valueFrom:
+                secretKeyRef:
+                  name: anna-knows
+                  key: pandora_app_id
+
+            - name: ANNA_PANDORA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: anna-knows
+                  key: pandora_key
+
+          volumeMounts:
+            - mountPath: /var/lib/anna/crypto
+              name: anna-disk
+
+          command:
+            - "/usr/bin/java"
+            - "-Ddw.auth=$(ANNA_TOKEN)"
+            - "-Ddw.server.applicationConnectors[1].keyStorePassword=$(ANNA_KEYSTORE_PASSWORD)"
+            - "-Ddw.pandora.appId=$(ANNA_PANDORA_ID)"
+            - "-Ddw.pandora.userKey=$(ANNA_PANDORA_KEY)"
+            - "-Ddw.cryptoDir=/var/lib/anna/crypto"
+            - "-jar"
+            - "anna.jar"
+            - "server"
+            - "/opt/anna/anna.yaml"
+
+      volumes:
+        - name: anna-disk
+          gcePersistentDisk:
+            pdName: anna-disk
+            fsType: ext4
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anna
+spec:
+  selector:
+    name: anna
+  type: LoadBalancer
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP
