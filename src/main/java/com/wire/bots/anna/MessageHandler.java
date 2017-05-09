@@ -23,6 +23,7 @@ import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.WireClient;
 import com.wire.bots.sdk.models.ImageMessage;
 import com.wire.bots.sdk.models.TextMessage;
+import com.wire.bots.sdk.server.model.Member;
 import com.wire.bots.sdk.server.model.NewBot;
 import com.wire.bots.sdk.server.model.User;
 
@@ -131,6 +132,11 @@ public class MessageHandler extends MessageHandlerBase {
                 newBot.id,
                 newBot.origin.id));
 
+        for (Member member : newBot.conversation.members) {
+            if (member.service != null) {
+                return false; // we don't want to be in a conv if other bots are there.
+            }
+        }
         return true;
     }
 

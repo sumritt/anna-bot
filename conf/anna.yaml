@@ -12,8 +12,8 @@ server:
   adminConnectors:
     - type: http
       port: 8061
-#  requestLog:
-#    appenders: []
+  requestLog:
+    appenders: []
 
 delay: 2
 

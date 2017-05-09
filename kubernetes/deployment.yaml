@@ -51,6 +51,9 @@ spec:
             - mountPath: /var/lib/anna/crypto
               name: anna-disk
 
+            - name: anna-config
+              mountPath: /etc/anna
+
           command:
             - "/usr/bin/java"
             - "-Ddw.auth=$(ANNA_TOKEN)"
@@ -61,7 +64,7 @@ spec:
             - "-jar"
             - "anna.jar"
             - "server"
-            - "/opt/anna/anna.yaml"
+            - "/etc/anna/anna.yaml"
 
       volumes:
         - name: anna-disk
@@ -69,6 +72,9 @@ spec:
             pdName: anna-disk
             fsType: ext4
 
+        - name: anna-config
+          configMap:
+            name: anna-config
 ---
 apiVersion: v1
 kind: Service
